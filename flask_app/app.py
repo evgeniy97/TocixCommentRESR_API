@@ -2,11 +2,12 @@ from flask import Flask, request, render_template, redirect
 from joblib import load
 app = Flask(__name__)
 
-def loadMOdel(path='model/model.joblib'):
+def loadMOdel(path):
     model = load(path)
     return model
 
-model = loadMOdel()
+vector = loadMOdel('model/vec.joblib')
+model = loadMOdel('model/model.joblib')
 
 @app.route('/', methods=["GET"])
 def hi():
@@ -14,9 +15,13 @@ def hi():
 
 @app.route('/predict', methods=["POST"])
 def predict():
-    text = request.text
-    predictionn = model.predict(text)
-    return predictionn
+    # Get text from request
+    #text = request.text
+    #prediction = model.predict(text)
+    
+    prediction = 1
+
+    return prediction
 
 
 @app.route('/add', methods=["POST"])
