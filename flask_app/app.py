@@ -1,32 +1,33 @@
 from flask import Flask, request, render_template, redirect
-from joblib import load
+import pickle
 import sqlite3
+import os
+import numpy as np
 from wtforms import Form, TextAreaField, validators
 
 DB_PATH = 'commentDB.sqlite'
 
 app = Flask(__name__)
 
-def loadMOdel(path):
-    model = load(path)
-    return model
 
-#vector = loadMOdel('model/vec.joblib')
-#model = loadMOdel('model/model.joblib')
+from vectorizer import vect
 
-LABEL = {0: 'not toxic', 1: 'toxic'}
+LABEL = {0: 'toxic', 1: 'not toxic'}
 
-LABEL_INV = {'not toxic': 0,'toxic': 1}
+LABEL_INV = {'not toxic': 1,'toxic': 0}
+
+cur_dir = os.path.dirname(__file__)
+clf = pickle.load(open(os.path.join(cur_dir,
+                 'model',
+                 'classifier.pkl'), 'rb'))
 
 def classify(text):
-    # Get text from request
-    #text = request.text
-    #prediction = model.predict(text)
     
-    y = 1
-    probability = 1.0
+    X = vect.transform([text])
+    y = clf.predict(X)[0]
+    proba = np.max(clf.predict_proba(X))
 
-    return LABEL[y], probability
+    return LABEL[y], proba
 
 def sqlite_entry(path, text, y):
     conn = sqlite3.connect(path)
