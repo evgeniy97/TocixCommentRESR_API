@@ -11,10 +11,12 @@ def loadMOdel(path):
     model = load(path)
     return model
 
-vector = loadMOdel('model/vec.joblib')
-model = loadMOdel('model/model.joblib')
+#vector = loadMOdel('model/vec.joblib')
+#model = loadMOdel('model/model.joblib')
 
 LABEL = {0: 'not toxic', 1: 'toxic'}
+
+LABEL_INV = {'not toxic': 0,'toxic': 1}
 
 def classify(text):
     # Get text from request
@@ -64,7 +66,8 @@ def feedback():
     comment = request.form['comment']
     prediction = request.form['prediction']
 
-    y = LABEL[prediction]
+    print()
+    y = LABEL_INV[prediction]
     if feedback == 'Incorrect':
         y = int(not(y))
     sqlite_entry(DB_PATH, comment, y)

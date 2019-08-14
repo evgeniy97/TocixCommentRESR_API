@@ -9,7 +9,7 @@ if os.path.exists(PATH):
 conn = sqlite3.connect(PATH)
 c = conn.cursor()
 
-c.execute('CREATE TABLE comment_db (comment TEXT, toxic INTEGER, data TEXT)')
+c.execute('CREATE TABLE comment_db (comment TEXT, toxic INTEGER, date TEXT)')
 
 conn.commit()
 conn.close()
